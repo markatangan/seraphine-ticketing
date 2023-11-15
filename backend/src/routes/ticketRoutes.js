@@ -6,6 +6,8 @@ const router = express.Router();
 router.get('/', ticketController.getAllTickets);
 // Get all categorie
 router.get('/category/', ticketController.getAllTicketCategory);
+// Get all priority
+router.get('/priority/', ticketController.getAllTicketPriority);
 // Get all status
 router.get('/status/', ticketController.getAllTicketStatus);
 // Get all tags
@@ -16,6 +18,8 @@ router.get('/:id', ticketController.getTicketById);
 router.post('/', ticketController.createTicket);
 // Create a new Categories
 router.post('/category/', ticketController.createTicketCategory);
+// Create a new Priority
+router.post('/priority/', ticketController.createTicketPriority);
 // Create a new Status
 router.post('/status/', ticketController.createTicketStatus);
 // Create a new Tags
@@ -24,5 +28,6 @@ router.post('/tags/', ticketController.createTicketTags);
 router.patch('/:id', ticketController.updateTicket);
 // Delete an existing ticket
 router.delete('/:id', ticketController.deleteTicket);
+
 
 module.exports = router;

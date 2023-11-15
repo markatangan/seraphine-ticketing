@@ -3,6 +3,7 @@ const TicketLogs = require('../models/TicketLogs')
 const TicketCategory = require('../models/TicketCategory')
 const TicketStatus = require('../models/TicketStatus')
 const TicketTags = require('../models/TicketTags')
+const TicketPriority = require('../models/TicketPriority')
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -18,6 +19,16 @@ const ticketController = {
   getAllTicketCategory: async (req, res) => {
     try {
       const tickets = await TicketCategory.find();
+      res.json(tickets);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  getAllTicketPriority: async (req, res) => {
+    try {
+      const tickets = await TicketPriority.find();
       res.json(tickets);
     } catch (error) {
       console.error(error);
@@ -57,28 +68,36 @@ const ticketController = {
   },
 
   createTicket: async (req, res) => {
-    const { title, description, category } = req.body;
-
+    const { title, description, category, selectedTags, dateRaised } = req.body;  
+    
     // Validation
-    if (!title || !description || !category) {
+    if (!title || !description || !category || !dateRaised) {
       return res.status(400).json({ error: 'Title, description, and category are required' });
     }
-
+  
+    const params = {
+      title,
+      description,
+      category,
+      dateRaised,
+      tags: selectedTags,
+      priority: '',
+      status: "Open"
+    }
     try {
-      var createParams = {
-        title: title,
-        description: description,
-        category: category
-      }
-      const newTicket = await Ticket.create(createParams);
-      res.status(201).json(newTicket);
+      // Create the ticket
+      const newTicket = await Ticket.create(params);
 
-      var ticketLogsParams = {
+      // Respond with the newly created ticket
+      res.status(201).json(newTicket);
+  
+      // Log the ticket creation
+      const ticketLogsParams = {
         ticketId: newTicket._id,
         actions: 'Create',
-        dateCreated: new Date()
-      }
-
+        dateCreated: new Date(),
+      };
+  
       await TicketLogs.create(ticketLogsParams);
     } catch (error) {
       console.error(error);
@@ -102,6 +121,28 @@ const ticketController = {
       }
       const newCategory = await TicketCategory.create(createParams);
       res.status(201).json(newCategory);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  createTicketPriority: async (req, res) => {
+    const { ticketPriorityCode, description, ticketPriorityId } = req.body;
+
+    // Validation
+    if (!ticketPriorityCode || !description || !ticketPriorityId) {
+      return res.status(400).json({ error: 'ticketPriorityCode, description, and ticketPriorityId are required' });
+    }
+
+    try {
+      var createParams = {
+        ticketPriorityCode: ticketPriorityCode,
+        description: description,
+        ticketPriorityId: ticketPriorityId
+      }
+      const newPriority = await TicketPriority.create(createParams);
+      res.status(201).json(newPriority);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
