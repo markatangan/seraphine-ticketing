@@ -1,11 +1,12 @@
 // frontend/src/components/TicketUpdate.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';  // Add this line
+import { useParams, useHistory } from 'react-router-dom';  // Add this line
 import apiService from '../apiService';
 
 
 function TicketUpdate() {
   const { id } = useParams();
+  const history = useHistory(); 
   const [ticket, setTicket] = useState({
     status: '',
     replicationSteps: '',
@@ -54,6 +55,9 @@ function TicketUpdate() {
     try {
       const response = await apiService.updateTicket(id, ticket);
       console.log(response.data); // handle success
+
+      // Redirect to TicketList.js after successful submission
+      history.push('/'); // Replace '/ticket-list' with the actual path you want to redirect to
     } catch (error) {
       console.error('Error updating ticket:', error);
     }
