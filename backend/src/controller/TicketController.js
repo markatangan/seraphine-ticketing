@@ -1,4 +1,5 @@
 const Ticket = require('../models/Ticket');
+const TicketLogs = require('../models/TicketLogs')
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -27,6 +28,37 @@ const ticketController = {
       }
       const newTicket = await Ticket.create(createParams);
       res.status(201).json(newTicket);
+
+      var ticketLogsParams = {
+        ticketId: newTicket._id,
+        actions: 'Create',
+        dateCreated: new Date()
+      }
+
+      await TicketLogs.create(ticketLogsParams);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  addTicketLogs: async (req, res) => {
+    const ticketId = req.ticketId
+    const actions = req.actions
+
+    // Validation
+    if (!ticketId || !actions) {
+      return res.status(400).json({ error: 'ticketId and actions are required' });
+    }
+
+    try {
+      var createParams = {
+        ticketId: ticketId,
+        actions: actions,
+        dateCreated: new Date()
+      }
+      const newTicketLogs = await TicketLogs.create(createParams);
+      res.status(201).json(newTicketLogs);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -48,6 +80,14 @@ const ticketController = {
         return res.status(404).json({ error: 'Ticket not found' });
       }
       res.json(updatedTicket);
+
+      var ticketLogsParams = {
+        ticketId: updatedTicket._id,
+        actions: 'Update',
+        dateCreated: new Date()
+      }
+
+      await TicketLogs.create(ticketLogsParams);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
