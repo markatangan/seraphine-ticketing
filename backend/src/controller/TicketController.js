@@ -1,6 +1,7 @@
 const Ticket = require('../models/Ticket');
 const TicketLogs = require('../models/TicketLogs')
 const TicketCategory = require('../models/TicketCategory')
+const TicketStatus = require('../models/TicketStatus')
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -17,6 +18,16 @@ const ticketController = {
     try {
       const tickets = await TicketCategory.find();
       res.json(tickets);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  getAllTicketStatus: async (req, res) => {
+    try {
+      const status = await TicketStatus.find();
+      res.json(status);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -80,12 +91,29 @@ const ticketController = {
       }
       const newCategory = await TicketCategory.create(createParams);
       res.status(201).json(newCategory);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
 
-      var ticketLogsParams = {
-        categoryCode: categoryCode,
+  createTicketStatus: async (req, res) => {
+    const { statusCode, description, statusId } = req.body;
+
+    // Validation
+    if (!statusCode || !description || !statusId) {
+      return res.status(400).json({ error: 'statusCode, description, and statusId are required' });
+    }
+
+    try {
+      var createParams = {
+        statusCode: statusCode,
         description: description,
-        categoryId: categoryId
+        statusId: statusId
       }
+      const newStatus = await TicketStatus.create(createParams);
+      res.status(201).json(newStatus);
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });

@@ -19,6 +19,15 @@ function TicketForm() {
       .catch(error => console.error('Error fetching categories:', error));
   }, []);
 
+  const [status, setStatus] = useState([]);
+
+  useEffect(() => {
+    // Fetch status using the API service
+    apiService.getStatus()
+        .then(response => setStatus(response.data))
+        .catch(error => console.error('Error fetching categories:', error));
+  }, []);
+
   const handleChange = (e) => {
     setTicket({ ...ticket, [e.target.name]: e.target.value });
   };
@@ -50,6 +59,17 @@ function TicketForm() {
             <option key={category.categoryId} value={category.categoryCode}>
               {category.description}
             </option>
+          ))}
+        </select>
+
+        {/* Dropdown for Status */}
+        <label>Category:</label>
+        <select name="status" onChange={handleChange} required className="form-control">
+          <option value="">Select a status</option>
+          {status.map((status) => (
+              <option key={status.statusId} value={status.statusCode}>
+                {status.description}
+              </option>
           ))}
         </select>
 
