@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
+const TicketController = require('../controller/Ticket');
 
 // Get all tickets
 router.get('/', async (req, res) => {
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { title, description, category } = req.body;
   try {
-    const newTicket = await Ticket.create({ title, description, category });
+    const newTicket = await TicketController.CreateTicket({title, description, category})
     res.status(201).json(newTicket);
   } catch (error) {
     console.error(error);

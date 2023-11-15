@@ -20,7 +20,7 @@ function TicketUpdate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`http://localhost:3001/api/tickets/${id}`, ticket);
+      const response = await axios.put(`http://localhost:3001/api/tickets/${id}`, ticket);
       console.log(response.data); // handle success
     } catch (error) {
       console.error('Error updating ticket:', error);
