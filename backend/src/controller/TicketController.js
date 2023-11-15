@@ -1,5 +1,4 @@
 const Ticket = require('../models/Ticket');
-const uuid = require('uuid');
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -22,7 +21,6 @@ const ticketController = {
 
     try {
       var createParams = {
-        ticketId: uuid.v4(),
         title: title,
         description: description,
         category: category
