@@ -1,21 +1,46 @@
-// backend/src/routes/ticketRoutes.js
+// routes/tickets.js
+
 const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
 
-// Define your routes here
-router.post('/', async (req, res) => {
+// Get all tickets
+router.get('/', async (req, res) => {
   try {
-    const newTicket = new Ticket(req.body);
-    await newTicket.save();
-
-    res.status(201).json({ success: true, message: 'Ticket created successfully' });
+    const tickets = await Ticket.find();
+    res.json(tickets);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-// Add more routes as needed
+// Create a new ticket
+router.post('/', async (req, res) => {
+  const { title, description, category } = req.body;
+  try {
+    const newTicket = await Ticket.create({ title, description, category });
+    res.status(201).json(newTicket);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Update an existing ticket
+router.patch('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updateFields = req.body;
+  try {
+    const updatedTicket = await Ticket.findByIdAndUpdate(id, updateFields, { new: true });
+    if (!updatedTicket) {
+      return res.status(404).json({ error: 'Ticket not found' });
+    }
+    res.json(updatedTicket);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 module.exports = router;
