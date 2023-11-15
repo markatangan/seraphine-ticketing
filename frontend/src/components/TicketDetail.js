@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import './TicketStyles.css'; // Import shared styles
 
 function TicketDetail() {
   const { id } = useParams();
@@ -21,17 +22,19 @@ function TicketDetail() {
   }, [id]);
 
   return (
-    <div>
-      <h2>Ticket Details</h2>
-      <p>Title: {ticket.title}</p>
-      <p>Description: {ticket.description}</p>
-      <p>Category: {ticket.category}</p>
-      <p>Status: {ticket.status}</p>
-      <p>Replication Steps: {ticket.replicationSteps}</p>
-      <p>Investigation Result: {ticket.investigationResult}</p>
-      <p>Solution: {ticket.solution}</p>
-      <p>Assigned To: {ticket.assignedTo}</p>
-      <Link to={`/update/${id}`}>Update Ticket</Link>
+    <div className="ticket-container">
+      <div className="ticket-details">
+        <h2>Ticket Details</h2>
+        <p><strong>Title:</strong> {ticket.title}</p>
+        <p><strong>Description:</strong> {ticket.description}</p>
+        <p><strong>Category:</strong> {ticket.category}</p>
+        <p><strong>Status:</strong> {ticket.status}</p>
+        <p><strong>Replication Steps:</strong> {ticket.replicationSteps}</p>
+        <p><strong>Investigation Result:</strong> {ticket.investigationResult}</p>
+        <p><strong>Solution:</strong> {ticket.solution}</p>
+        <p><strong>Assigned To:</strong> {ticket.assignedTo}</p>
+        <Link to={`/update/${id}`} className="btn btn-primary">Update Ticket</Link>
+      </div>
     </div>
   );
 }
