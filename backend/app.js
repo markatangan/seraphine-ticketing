@@ -18,6 +18,8 @@ mongoose.connect('mongodb://mongo:27017/support_ticketing', {
 // Routes
 const ticketRoutes = require('./src/routes/ticketRoutes');
 app.use('/api/tickets', ticketRoutes);
+const helpdeskRoutes = require('./src/routes/helpdeskRoutes');
+app.use('/helpdesk', helpdeskRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

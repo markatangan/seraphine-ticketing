@@ -1,9 +1,9 @@
-const Ticket = require('../models/Ticket');
-const TicketLogs = require('../models/TicketLogs')
-const TicketCategory = require('../models/TicketCategory')
-const TicketStatus = require('../models/TicketStatus')
-const TicketTags = require('../models/TicketTags')
-const TicketPriority = require('../models/TicketPriority')
+const Ticket = require('../models/tickets/Ticket');
+const TicketLogs = require('../models/tickets/TicketLogs');
+const TicketCategory = require('../models/tickets/TicketCategory');
+const TicketStatus = require('../models/tickets/TicketStatus')
+const TicketTags = require('../models/tickets/TicketTags')
+const TicketPriority = require('../models/tickets/TicketPriority')
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -68,10 +68,10 @@ const ticketController = {
   },
 
   createTicket: async (req, res) => {
-    const { title, description, category, selectedTags, dateRaised } = req.body;  
+    const { title, description, category, selectedTags, dateRaised, reportedBy } = req.body;  
     
     // Validation
-    if (!title || !description || !category || !dateRaised) {
+    if (!title || !description || !category || !dateRaised || !reportedBy) {
       return res.status(400).json({ error: 'Title, description, and category are required' });
     }
   
@@ -82,7 +82,8 @@ const ticketController = {
       dateRaised,
       tags: selectedTags,
       priority: '',
-      status: "Open"
+      status: "Open",
+      reportedBy
     }
     try {
       // Create the ticket

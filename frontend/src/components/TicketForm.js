@@ -11,7 +11,7 @@ function TicketForm() {
     category: '',
     selectedTags: [], // Initialize as an empty array
     dateRaised: '', // Add dateRaised field
-    email: '', // Add email field
+    reportedBy: '', // Add email field
   });
 
   const [categories, setCategories] = useState([]);
@@ -75,10 +75,10 @@ function TicketForm() {
       <form onSubmit={handleSubmit}>
         {/* Email Field */}
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email:</label>
+          <label htmlFor="reportedBy" className="form-label">Email:</label>
           <input
             type="email"
-            name="email"
+            name="reportedBy"
             onChange={handleChange}
             value={ticket.reportedBy}
             className="form-control"
