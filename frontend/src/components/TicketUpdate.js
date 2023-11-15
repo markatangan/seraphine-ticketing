@@ -55,7 +55,7 @@ function TicketUpdate() {
     try {
       const response = await apiService.updateTicket(id, ticket);
       console.log(response.data); // handle success
-
+      alert('Ticket updated successfully!');
       // Redirect to TicketList.js after successful submission
       history.push('/'); // Replace '/ticket-list' with the actual path you want to redirect to
     } catch (error) {

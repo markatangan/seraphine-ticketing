@@ -58,6 +58,22 @@ function TicketForm() {
     try {
       const response = await apiService.createTicket(ticket);
       console.log(response.data); // handle success
+  
+      // Show alert for successful submission
+      alert('Ticket submitted successfully!');
+  
+      // Clear the form (reset the state)
+      setTicket({
+        title: '',
+        description: '',
+        category: '',
+        selectedTags: [],
+        dateRaised: '',
+        reportedBy: '',
+      });
+  
+      // Alternatively, you can reload the page
+      // window.location.reload();
     } catch (error) {
       console.error('Error creating ticket:', error);
     }
