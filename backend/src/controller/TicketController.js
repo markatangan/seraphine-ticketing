@@ -1,4 +1,5 @@
 const Ticket = require('../models/Ticket');
+const uuid = require('uuid');
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -20,7 +21,13 @@ const ticketController = {
     }
 
     try {
-      const newTicket = await Ticket.create({ title, description, category });
+      var createParams = {
+        ticketId: uuid.v4(),
+        title: title,
+        description: description,
+        category: category
+      }
+      const newTicket = await Ticket.create(createParams);
       res.status(201).json(newTicket);
     } catch (error) {
       console.error(error);
@@ -43,6 +50,26 @@ const ticketController = {
         return res.status(404).json({ error: 'Ticket not found' });
       }
       res.json(updatedTicket);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  deleteTicket: async (req, res) => {
+    const { id } = req.params;
+
+    // Validation
+    if (!id) {
+      return res.status(400).json({ error: 'Ticket ID is required' });
+    }
+
+    try {
+      const deletedTicket = await Ticket.findByIdAndDelete(id);
+      if (!deletedTicket) {
+        return res.status(404).json({ error: 'Ticket not found' });
+      }
+      res.json(deletedTicket);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
