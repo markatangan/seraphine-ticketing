@@ -2,6 +2,7 @@ const Ticket = require('../models/Ticket');
 const TicketLogs = require('../models/TicketLogs')
 const TicketCategory = require('../models/TicketCategory')
 const TicketStatus = require('../models/TicketStatus')
+const TicketTags = require('../models/TicketTags')
 
 const ticketController = {
   getAllTickets: async (req, res) => {
@@ -28,6 +29,16 @@ const ticketController = {
     try {
       const status = await TicketStatus.find();
       res.json(status);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  getAllTicketTags: async (req, res) => {
+    try {
+      const tags = await TicketTags.find();
+      res.json(tags);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -106,12 +117,12 @@ const ticketController = {
     }
 
     try {
-      var createParams = {
+      var statusParams = {
         statusCode: statusCode,
         description: description,
         statusId: statusId
       }
-      const newStatus = await TicketStatus.create(createParams);
+      const newStatus = await TicketStatus.create(statusParams);
       res.status(201).json(newStatus);
 
     } catch (error) {
@@ -120,23 +131,23 @@ const ticketController = {
     }
   },
 
-  addTicketLogs: async (req, res) => {
-    const ticketId = req.ticketId
-    const actions = req.actions
+  createTicketTags: async (req, res) => {
+    const { tagsCode, description, tagsId } = req.body;
 
     // Validation
-    if (!ticketId || !actions) {
-      return res.status(400).json({ error: 'ticketId and actions are required' });
+    if (!tagsCode || !description || !tagsId) {
+      return res.status(400).json({ error: 'tagsCode, description, and tagsId are required' });
     }
 
     try {
-      var createParams = {
-        ticketId: ticketId,
-        actions: actions,
-        dateCreated: new Date()
+      var tagsParams = {
+        tagsCode: tagsCode,
+        description: description,
+        tagsId: tagsId
       }
-      const newTicketLogs = await TicketLogs.create(createParams);
-      res.status(201).json(newTicketLogs);
+      const newTags = await TicketTags.create(tagsParams);
+      res.status(201).json(newTags);
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
