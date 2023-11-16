@@ -100,12 +100,12 @@ function TicketUpdate() {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">Issue Title:</label>
-          <textarea name="title" onChange={handleChange} value={ticket.title} className="form-control"></textarea>
+          <textarea name="title" onChange={handleChange} value={ticket.title} className="form-control" readOnly></textarea>
         </div>
 
         <div className="mb-3">
           <label htmlFor="description" className="form-label">Description:</label>
-          <textarea name="description" onChange={handleChange} value={ticket.description} className="form-control"></textarea>
+          <textarea name="description" onChange={handleChange} value={ticket.description} className="form-control" readOnly></textarea>
         </div>
 
         {/* Category Dropdown */}
@@ -153,7 +153,7 @@ function TicketUpdate() {
             value={ticket.assignedTo}
             className="form-select"
           >
-            <option value="">Select Assignee</option>
+            <option value="">Unassigned</option>
             {assignees.map((assignee) => (
               <option key={assignee.userName} value={assignee.userEmail}>
                 {assignee.userEmail}

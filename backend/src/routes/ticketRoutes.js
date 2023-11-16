@@ -29,5 +29,8 @@ router.patch('/:id', ticketController.updateTicket);
 // Delete an existing ticket
 router.delete('/:id', ticketController.deleteTicket);
 
+router.get('/related/:id', ticketController.getRelatedTickets);
+router.post('/slack', ticketController.sendSlackNotification);
+
 
 module.exports = router;

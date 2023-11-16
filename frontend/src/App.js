@@ -11,13 +11,9 @@ function App() {
   return (
     <Router>
       <div className="navbar">
-        <h1>Seraphine Helpdesk</h1>
+        <h1><Link to="/">Seraphine Helpdesk</Link></h1>
       </div>
       <div className="content">
-        <div className="sidebar">
-          <Link to="/">Dashboard</Link>
-          <Link to="/create">Create Ticket</Link>
-        </div>
         <div className="container">
           <Switch>
             <Route path="/" exact component={TicketList} />

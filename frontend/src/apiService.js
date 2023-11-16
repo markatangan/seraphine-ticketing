@@ -12,6 +12,7 @@ const apiService = {
   getAssignees: () => axios.get('http://localhost:3001/helpdesk/users'),
   getTicket: (id) => axios.get(`http://localhost:3001/api/tickets/${id}`),
   updateTicket: (id, ticketData) => axios.patch(`http://localhost:3001/api/tickets/${id}`, ticketData),
+  sendSlackNotification: (ticketData) => axios.post('http://localhost:3001/api/tickets/slack', ticketData),
   // Add other API functions as needed
 };
 

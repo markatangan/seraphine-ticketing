@@ -1,6 +1,8 @@
-// frontend/src/components/TicketList.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './TicketStyles.css'; // Import shared styles
 
@@ -77,6 +79,27 @@ const TicketList = () => {
 
   const filteredTickets = applySidebarFilters().filter(applySearchFilter);
 
+  const paginationOptions = {
+    sizePerPageList: [
+      { text: '5', value: 5 },
+      { text: '10', value: 10 },
+      { text: '20', value: 20 },
+      { text: 'All', value: filteredTickets.length },
+    ],
+  };
+
+  const columns = [
+    { dataField: '_id', text: 'Ticket ID' },
+    { dataField: 'title', text: 'Ticket Name' },
+    { dataField: 'dateRaised', text: 'Date Raised', formatter: dateFormatter },
+    { dataField: 'priority', text: 'Priority' },
+    { dataField: 'category', text: 'Category' },
+    { dataField: 'tags', text: 'Tags', formatter: tagsFormatter },
+    { dataField: 'status', text: 'Status' },
+    { dataField: 'reportedBy', text: 'Reported By' },
+    { dataField: '_id', text: 'Actions', formatter: actionsFormatter },
+  ];
+
   return (
     <div className="ticket-list">
       <div className="sidebar">
@@ -138,46 +161,37 @@ const TicketList = () => {
           onChange={(e) => setSearchFilter(e.target.value)}
           className="form-control mt-3"
         />
-        <table className="table mt-3">
-          <thead>
-            <tr>
-              <th>Ticket ID</th>
-              <th>Ticket Name</th>
-              <th>Date Raised</th>
-              <th>Priority</th>
-              <th>Category</th>
-              <th>Tags</th>
-              <th>Status</th>
-              <th>Reported By</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTickets.map((ticket) => (
-              <tr key={ticket._id}>
-                <td>{ticket._id}</td>
-                <td>{ticket.title}</td>
-                <td>{new Date(ticket.dateRaised).toLocaleDateString()}</td>
-                <td>{ticket.priority || "N/A"}</td>
-                <td>{ticket.category}</td>
-                <td>{ticket.tags.length > 0 ? ticket.tags.map((tag) => tag[0]).join(', ') : 'N/A'}</td>
-                <td>{ticket.status}</td>
-                <td>{ticket.reportedBy}</td>
-                <td>
-                  <Link to={`/ticket/${ticket._id}`} className="btn btn-info btn-sm">
-                    View
-                  </Link>{' '}
-                  <Link to={`/update/${ticket._id}`} className="btn btn-warning btn-sm">
-                    Update
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <BootstrapTable
+          keyField="_id"
+          data={filteredTickets}
+          columns={columns}
+          pagination={paginationFactory(paginationOptions)}
+        />
       </div>
     </div>
   );
 };
 
 export default TicketList;
+
+// Helper functions
+function dateFormatter(cell) {
+  return new Date(cell).toLocaleDateString();
+}
+
+function tagsFormatter(cell) {
+  return cell.length > 0 ? cell.map((tag) => tag[0]).join(', ') : 'N/A';
+}
+
+function actionsFormatter(cell, row) {
+  return (
+    <>
+      <Link to={`/ticket/${row._id}`} className="btn btn-info btn-sm">
+        View
+      </Link>{' '}
+      <Link to={`/update/${row._id}`} className="btn btn-warning btn-sm">
+        Update
+      </Link>
+    </>
+  );
+}

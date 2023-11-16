@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import apiService from '../apiService';
 import './TicketStyles.css'; // Import shared styles
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap styles
+import axios from 'axios';
 
 function TicketForm() {
   const [ticket, setTicket] = useState({
@@ -58,6 +59,8 @@ function TicketForm() {
     try {
       const response = await apiService.createTicket(ticket);
       console.log(response.data); // handle success
+      await apiService.sendSlackNotification(response.data);
+
   
       // Show alert for successful submission
       alert('Ticket submitted successfully!');
